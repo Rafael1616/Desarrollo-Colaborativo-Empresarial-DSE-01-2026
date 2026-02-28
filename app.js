@@ -37,3 +37,22 @@ let productos = [
     }
 ];
 
+// ===============================
+// REFERENCIAS DEL DOM
+// ===============================
+const form = document.getElementById("productoForm");
+const tabla = document.getElementById("tablaProductos");
+const indiceInput = document.getElementById("indice");
+
+
+
+
+
+// ===============================
+// INSERTAR PRODUCTO
+// ===============================
+// Agrega un nuevo producto al array.
+function insertarProducto() {
+    const producto = obtenerDatosFormulario();
+    productos.push(producto);
+}
