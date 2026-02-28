@@ -89,7 +89,32 @@ function obtenerDatosFormulario() {
 // ===============================
 // Agrega un nuevo producto al array.
 function insertarProducto() {
+
     const producto = obtenerDatosFormulario();
+
+    // 🔎 Validar nombre repetido (ignorando mayúsculas/minúsculas)
+    const productoExiste = productos.some(p =>
+        p.nombre.toLowerCase() === producto.nombre.toLowerCase()
+    );
+
+    if (productoExiste) {
+        alert("❌ Ya existe un producto con ese nombre.");
+        return;
+    }
+
+    // 💲 Validar precio
+    if (producto.precio <= 0 || isNaN(producto.precio)) {
+        alert("❌ El precio debe ser mayor a 0.");
+        return;
+    }
+
+    // 📦 Validar stock
+    if (producto.stock < 0 || isNaN(producto.stock)) {
+        alert("❌ El stock no puede ser negativo.");
+        return;
+    }
+
+    // ✅ Si todo está correcto, se agrega
     productos.push(producto);
 }
 
