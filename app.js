@@ -37,12 +37,48 @@ let productos = [
     }
 ];
 
+
 // ===============================
 // REFERENCIAS DEL DOM
 // ===============================
 const form = document.getElementById("productoForm");
 const tabla = document.getElementById("tablaProductos");
 const indiceInput = document.getElementById("indice");
+
+
+// ===============================
+// EVENTO SUBMIT DEL FORMULARIO
+// ===============================
+// Controla si el usuario está creando o editando un producto.
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // Evita que la página se recargue
+
+    if (indiceInput.value === "") {
+        insertarProducto();
+    } else {
+        actualizarProducto();
+    }
+
+    form.reset();          // Limpia el formulario
+    indiceInput.value = ""; // Reinicia el índice oculto
+    mostrarProductos();     // Refresca la tabla
+});
+
+
+// ===============================
+// OBTENER DATOS DEL FORMULARIO
+// ===============================
+// Retorna un objeto producto con los valores actuales del formulario.
+function obtenerDatosFormulario() {
+    return {
+        nombre: document.getElementById("nombre").value.trim(),
+        descripcion: document.getElementById("descripcion").value.trim(),
+        precio: Number(document.getElementById("precio").value),
+        stock: Number(document.getElementById("stock").value),
+        estado: document.getElementById("estado").value
+    };
+}   
+
 
 
 
@@ -56,3 +92,42 @@ function insertarProducto() {
     const producto = obtenerDatosFormulario();
     productos.push(producto);
 }
+
+// ===============================
+// MOSTRAR PRODUCTOS EN TABLA
+// ===============================
+// Recorre el array y renderiza dinámicamente la tabla.
+function mostrarProductos() {
+    tabla.innerHTML = ""; // Limpia la tabla antes de volver a pintar
+
+    productos.forEach((producto, index) => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${producto.nombre}</td>
+                <td>${producto.descripcion}</td>
+                <td>$${producto.precio}</td>
+                <td>${producto.stock}</td>
+                <td>
+                    <span class="badge ${producto.estado === 'Disponible' ? 'bg-success' : 'bg-danger'}">
+                        ${producto.estado}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editarProducto(${index})">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${index})">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+
+// ===============================
+// INICIALIZACIÓN
+// ===============================
+// Se ejecuta al cargar la página para mostrar los productos iniciales.
+mostrarProductos();
