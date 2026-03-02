@@ -124,7 +124,7 @@ function insertarProducto() {
 // Recorre el array y renderiza dinámicamente la tabla.
 function mostrarProductos() {
 
-    // Limpia la tabla antes de volver a pintar
+      // Limpia la tabla antes de volver a pintar
     tabla.innerHTML = ""; 
 
     productos.forEach((producto, index) => {
