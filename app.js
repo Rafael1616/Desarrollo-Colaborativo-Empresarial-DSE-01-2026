@@ -155,6 +155,27 @@ function mostrarProductos() {
     });
 }
 
+// Carga los datos del producto seleccionado al formulario
+function editarProducto(index) {
+    const producto = productos[index];
+
+    document.getElementById("nombre").value = producto.nombre;
+    document.getElementById("descripcion").value = producto.descripcion;
+    document.getElementById("precio").value = producto.precio;
+    document.getElementById("stock").value = producto.stock;
+    document.getElementById("estado").value = producto.estado;
+
+    indiceInput.value = index;
+}
+
+// Actualiza el producto en el array con los nuevos datos
+function actualizarProducto() {
+    const index = Number(indiceInput.value);
+    productos[index] = obtenerDatosFormulario();
+}
+
+
+
 
 // ===============================
 // INICIALIZACIÓN
