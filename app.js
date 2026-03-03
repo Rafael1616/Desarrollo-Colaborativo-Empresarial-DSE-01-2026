@@ -114,7 +114,7 @@ function insertarProducto() {
         return;
     }
 
-    // ✅ Si todo está correcto, se agrega
+    // Si todo está correcto, se agrega
     productos.push(producto);
 
     
