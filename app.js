@@ -98,19 +98,19 @@ function insertarProducto() {
     );
 
     if (productoExiste) {
-        alert("❌ Ya existe un producto con ese nombre.");
+        alert("Ya existe un producto con ese nombre.");
         return;
     }
 
     // 💲 Validar precio
     if (producto.precio <= 0 || isNaN(producto.precio)) {
-        alert("❌ El precio debe ser mayor a 0.");
+        alert("El precio debe ser mayor a 0.");
         return;
     }
 
     // 📦 Validar stock
     if (producto.stock < 0 || isNaN(producto.stock)) {
-        alert("❌ El stock no puede ser negativo.");
+        alert("El stock no puede ser negativo.");
         return;
     }
 
@@ -183,5 +183,16 @@ function editarProducto(index) {
 function actualizarProducto() {
     const index = Number(indiceInput.value);
     productos[index] = obtenerDatosFormulario();
-	alert("✅ Producto actualizado correctamente.")
+	alert(" Producto actualizado correctamente.")
+}
+
+// ===============================
+// ELIMINAR PRODUCTO
+// ===============================
+function eliminarProducto(index) {
+    if (confirm("¿Estás seguro de eliminar este producto?")) {
+        productos.splice(index, 1);
+        mostrarProductos();
+        alert(" Producto eliminado correctamente.");
+    }
 }
