@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Array donde guardamos los productos
 let productos = [
     {
@@ -297,6 +298,8 @@ function actualizarProducto() {
 	alert(" Producto actualizado correctamente.")
 }
 
+=======
+>>>>>>> feature/borrar-producto
 // ===============================
 // ELIMINAR PRODUCTO
 // ===============================
@@ -315,15 +318,7 @@ function eliminarProducto(index) {
             const nombre = productos[index].nombre;
             productos.splice(index, 1);
             mostrarProductos();
- 
-            Swal.fire({
-                icon: "success",
-                title: "Eliminado",
-                text: `"${nombre}" fue eliminado correctamente.`,
-                confirmButtonColor: "#0d6efd",
-                timer: 2000,
-                timerProgressBar: true
-            });
+            Swal.fire({ icon: "success", title: "Eliminado", text: `"${nombre}" fue eliminado correctamente.`, confirmButtonColor: "#0d6efd", timer: 2000, timerProgressBar: true });
         }
     });
 }
