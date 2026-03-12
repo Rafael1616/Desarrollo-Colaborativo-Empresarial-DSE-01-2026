@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // Array donde guardamos los productos
 let productos = [
     {
@@ -298,8 +298,7 @@ function actualizarProducto() {
 	alert(" Producto actualizado correctamente.")
 }
 
-=======
->>>>>>> feature/borrar-producto
+
 // ===============================
 // ELIMINAR PRODUCTO
 // ===============================
