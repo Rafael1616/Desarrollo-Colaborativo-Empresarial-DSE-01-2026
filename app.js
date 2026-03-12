@@ -25,6 +25,19 @@ const vistaTabla = document.getElementById("vistaTabla");
 const vistaFormulario = document.getElementById("vistaFormulario");
 const selectCategoria = document.getElementById("categoria");
 const inputNuevaCategoria = document.getElementById("nuevaCategoria");
+const inputBusqueda = document.getElementById("busqueda");
+
+
+// ===============================
+// BÚSQUEDA Y FILTRADO
+// ===============================
+inputBusqueda.addEventListener("input", function() {
+    const termino = this.value.trim().toLowerCase();
+    const filtrados = productos.filter(p =>
+        p.nombre.toLowerCase().includes(termino)
+    );
+    renderTabla(filtrados);
+});
 
 
 // ===============================
@@ -39,14 +52,12 @@ function cargarCategorias() {
         selectCategoria.appendChild(option);
     });
 
-    // Opción para crear nueva
     const optionNueva = document.createElement("option");
     optionNueva.value = "__nueva__";
     optionNueva.textContent = "➕ Nueva categoría...";
     selectCategoria.appendChild(optionNueva);
 }
 
-// Mostrar/ocultar input de nueva categoría
 selectCategoria.addEventListener("change", function() {
     if (this.value === "__nueva__") {
         inputNuevaCategoria.classList.remove("hidden");
@@ -74,6 +85,7 @@ function mostrarTabla() {
     form.reset();
     indiceInput.value = "";
     inputNuevaCategoria.classList.add("hidden");
+    inputBusqueda.value = "";
 }
 
 function cancelarFormulario() {
@@ -100,14 +112,12 @@ form.addEventListener("submit", function(e) {
 function obtenerDatosFormulario() {
     let categoria = selectCategoria.value;
 
-    // Si eligió nueva categoría
     if (categoria === "__nueva__") {
         const nueva = inputNuevaCategoria.value.trim();
         if (!nueva) {
             Swal.fire({ icon: "warning", title: "Categoría vacía", text: "Escribí el nombre de la nueva categoría.", confirmButtonColor: "#0d6efd" });
             return null;
         }
-        // Agregar al array si no existe
         if (!categorias.includes(nueva)) {
             categorias.push(nueva);
         }
@@ -160,12 +170,24 @@ function insertarProducto() {
 
 
 // ===============================
-// MOSTRAR PRODUCTOS EN TABLA
+// RENDER TABLA (con lista filtrada o completa)
 // ===============================
-function mostrarProductos() {
+function renderTabla(lista) {
     tabla.innerHTML = "";
 
-    productos.forEach((producto, index) => {
+    if (lista.length === 0) {
+        tabla.innerHTML = `
+            <tr>
+                <td colspan="7" style="padding:24px; color:#94a3b8; font-style:italic;">
+                    No se encontraron productos.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    lista.forEach((producto, index) => {
+        const indexReal = productos.indexOf(producto);
         const badgeClass = producto.estado === "Disponible" ? "badge-disponible" : "badge-agotado";
         tabla.innerHTML += `
             <tr>
@@ -176,12 +198,20 @@ function mostrarProductos() {
                 <td>${producto.stock}</td>
                 <td><span class="badge-estado ${badgeClass}">${producto.estado}</span></td>
                 <td>
-                    <button class="btn-edit" onclick="editarProducto(${index})">Editar</button>
-                    <button class="btn-delete" onclick="eliminarProducto(${index})">Eliminar</button>
+                    <button class="btn-edit" onclick="editarProducto(${indexReal})">Editar</button>
+                    <button class="btn-delete" onclick="eliminarProducto(${indexReal})">Eliminar</button>
                 </td>
             </tr>
         `;
     });
+}
+
+
+// ===============================
+// MOSTRAR PRODUCTOS EN TABLA
+// ===============================
+function mostrarProductos() {
+    renderTabla(productos);
 }
 
 
@@ -199,8 +229,6 @@ function editarProducto(index) {
 
     indiceInput.value = index;
     mostrarFormulario(true);
-
-    // Seleccionar la categoría del producto
     selectCategoria.value = producto.categoria;
 }
 
