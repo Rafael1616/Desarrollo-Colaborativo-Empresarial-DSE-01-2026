@@ -1,11 +1,19 @@
-// Array donde guardamos los productos
+// ===============================
+// CATEGORÍAS
+// ===============================
+let categorias = ["Electrónica", "Periféricos", "Almacenamiento"];
+
+// ===============================
+// ARRAY DE PRODUCTOS
+// ===============================
 let productos = [
-    { nombre: "Laptop Lenovo IdeaPad 3", descripcion: "Laptop 15.6\" Ryzen 5, 8GB RAM, 512GB SSD", precio: 650, stock: 10, estado: "Disponible" },
-    { nombre: "Mouse Logitech G203", descripcion: "Mouse gamer RGB 8000 DPI", precio: 25, stock: 30, estado: "Disponible" },
-    { nombre: "Teclado Mecánico Redragon K552", descripcion: "Teclado mecánico switches azules", precio: 45, stock: 15, estado: "Disponible" },
-    { nombre: "Monitor Samsung 24\"", descripcion: "Monitor Full HD 75Hz HDMI", precio: 140, stock: 8, estado: "Agotado" },
-    { nombre: "Disco SSD Kingston 1TB", descripcion: "SSD SATA 2.5\" 1TB", precio: 80, stock: 20, estado: "Disponible" }
+    { nombre: "Laptop Lenovo IdeaPad 3", descripcion: "Laptop 15.6\" Ryzen 5, 8GB RAM, 512GB SSD", precio: 650, stock: 10, estado: "Disponible", categoria: "Electrónica" },
+    { nombre: "Mouse Logitech G203", descripcion: "Mouse gamer RGB 8000 DPI", precio: 25, stock: 30, estado: "Disponible", categoria: "Periféricos" },
+    { nombre: "Teclado Mecánico Redragon K552", descripcion: "Teclado mecánico switches azules", precio: 45, stock: 15, estado: "Disponible", categoria: "Periféricos" },
+    { nombre: "Monitor Samsung 24\"", descripcion: "Monitor Full HD 75Hz HDMI", precio: 140, stock: 8, estado: "Agotado", categoria: "Electrónica" },
+    { nombre: "Disco SSD Kingston 1TB", descripcion: "SSD SATA 2.5\" 1TB", precio: 80, stock: 20, estado: "Disponible", categoria: "Almacenamiento" }
 ];
+
 
 // ===============================
 // REFERENCIAS DEL DOM
@@ -15,6 +23,39 @@ const tabla = document.getElementById("tablaProductos");
 const indiceInput = document.getElementById("indice");
 const vistaTabla = document.getElementById("vistaTabla");
 const vistaFormulario = document.getElementById("vistaFormulario");
+const selectCategoria = document.getElementById("categoria");
+const inputNuevaCategoria = document.getElementById("nuevaCategoria");
+
+
+// ===============================
+// CARGAR CATEGORÍAS EN SELECT
+// ===============================
+function cargarCategorias() {
+    selectCategoria.innerHTML = "";
+    categorias.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        selectCategoria.appendChild(option);
+    });
+
+    // Opción para crear nueva
+    const optionNueva = document.createElement("option");
+    optionNueva.value = "__nueva__";
+    optionNueva.textContent = "➕ Nueva categoría...";
+    selectCategoria.appendChild(optionNueva);
+}
+
+// Mostrar/ocultar input de nueva categoría
+selectCategoria.addEventListener("change", function() {
+    if (this.value === "__nueva__") {
+        inputNuevaCategoria.classList.remove("hidden");
+        inputNuevaCategoria.focus();
+    } else {
+        inputNuevaCategoria.classList.add("hidden");
+        inputNuevaCategoria.value = "";
+    }
+});
 
 
 // ===============================
@@ -24,6 +65,7 @@ function mostrarFormulario(esEdicion = false) {
     vistaTabla.classList.add("hidden");
     vistaFormulario.classList.remove("hidden");
     document.getElementById("formTitulo").textContent = esEdicion ? "Editar Producto" : "Nuevo Producto";
+    cargarCategorias();
 }
 
 function mostrarTabla() {
@@ -31,6 +73,7 @@ function mostrarTabla() {
     vistaTabla.classList.remove("hidden");
     form.reset();
     indiceInput.value = "";
+    inputNuevaCategoria.classList.add("hidden");
 }
 
 function cancelarFormulario() {
@@ -56,7 +99,7 @@ form.addEventListener("submit", function(e) {
 // ===============================
 function obtenerDatosFormulario() {
     let categoria = selectCategoria.value;
- 
+
     // Si eligió nueva categoría
     if (categoria === "__nueva__") {
         const nueva = inputNuevaCategoria.value.trim();
@@ -70,7 +113,7 @@ function obtenerDatosFormulario() {
         }
         categoria = nueva;
     }
- 
+
     return {
         nombre: document.getElementById("nombre").value.trim(),
         descripcion: document.getElementById("descripcion").value.trim(),
@@ -87,6 +130,7 @@ function obtenerDatosFormulario() {
 // ===============================
 function insertarProducto() {
     const producto = obtenerDatosFormulario();
+    if (!producto) return;
 
     const productoExiste = productos.some(p =>
         p.nombre.toLowerCase() === producto.nombre.toLowerCase()
@@ -127,6 +171,7 @@ function mostrarProductos() {
             <tr>
                 <td>${producto.nombre}</td>
                 <td>${producto.descripcion}</td>
+                <td><span class="badge-categoria">${producto.categoria}</span></td>
                 <td>$${producto.precio}</td>
                 <td>${producto.stock}</td>
                 <td><span class="badge-estado ${badgeClass}">${producto.estado}</span></td>
@@ -145,13 +190,18 @@ function mostrarProductos() {
 // ===============================
 function editarProducto(index) {
     const producto = productos[index];
+
     document.getElementById("nombre").value = producto.nombre;
     document.getElementById("descripcion").value = producto.descripcion;
     document.getElementById("precio").value = producto.precio;
     document.getElementById("stock").value = producto.stock;
     document.getElementById("estado").value = producto.estado;
+
     indiceInput.value = index;
     mostrarFormulario(true);
+
+    // Seleccionar la categoría del producto
+    selectCategoria.value = producto.categoria;
 }
 
 
@@ -159,10 +209,15 @@ function editarProducto(index) {
 // ACTUALIZAR PRODUCTO
 // ===============================
 function actualizarProducto() {
+    const producto = obtenerDatosFormulario();
+    if (!producto) return;
+
     const index = Number(indiceInput.value);
-    productos[index] = obtenerDatosFormulario();
+    productos[index] = producto;
+
     mostrarProductos();
     mostrarTabla();
+
     Swal.fire({ icon: "success", title: "¡Producto actualizado!", text: "Los cambios fueron guardados correctamente.", confirmButtonColor: "#0d6efd", timer: 2500, timerProgressBar: true });
 }
 
