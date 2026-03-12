@@ -55,12 +55,29 @@ form.addEventListener("submit", function(e) {
 // OBTENER DATOS DEL FORMULARIO
 // ===============================
 function obtenerDatosFormulario() {
+    let categoria = selectCategoria.value;
+ 
+    // Si eligió nueva categoría
+    if (categoria === "__nueva__") {
+        const nueva = inputNuevaCategoria.value.trim();
+        if (!nueva) {
+            Swal.fire({ icon: "warning", title: "Categoría vacía", text: "Escribí el nombre de la nueva categoría.", confirmButtonColor: "#0d6efd" });
+            return null;
+        }
+        // Agregar al array si no existe
+        if (!categorias.includes(nueva)) {
+            categorias.push(nueva);
+        }
+        categoria = nueva;
+    }
+ 
     return {
         nombre: document.getElementById("nombre").value.trim(),
         descripcion: document.getElementById("descripcion").value.trim(),
         precio: Number(document.getElementById("precio").value),
         stock: Number(document.getElementById("stock").value),
-        estado: document.getElementById("estado").value
+        estado: document.getElementById("estado").value,
+        categoria: categoria
     };
 }
 
