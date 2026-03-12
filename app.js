@@ -18,9 +18,10 @@ function cancelarFormulario() {
     mostrarTabla();
 }
  
-// ===============================
+// ==============================
 // MOSTRAR PRODUCTOS EN TABLA
-// ===============================
+// ==============================
+
 function mostrarProductos() {
     tabla.innerHTML = "";
  
