@@ -34,7 +34,7 @@ const inputBusqueda = document.getElementById("busqueda");
 inputBusqueda.addEventListener("input", function() {
     const termino = this.value.trim().toLowerCase();
     const filtrados = productos.filter(p =>
-        p.nombre.toLowerCase().includes(termino)
+        p.nombre.toLowerCase().startsWith(termino)
     );
     renderTabla(filtrados);
 });
